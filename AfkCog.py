@@ -9,7 +9,7 @@ class DndCog(commands.Cog):
         print("[DEBUG]: DND LOGGER ONLINE")
 
     @commands.command(aliases=['afk'])
-    async def dnd(self, ctx, arg1="on", arg2="On"):
+    async def dnd(self, ctx, arg1="on"):
         conn = sqlite3.connect('afk_status.db')
         c = conn.cursor()
         if arg1.lower() == "on":
