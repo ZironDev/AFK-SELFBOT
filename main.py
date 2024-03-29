@@ -16,7 +16,7 @@ prefix = "."
 USER_TOKEN = ""
 client = commands.Bot(command_prefix=prefix, case_insensitive=True, self_bot=True, intents=intents)
 client.remove_command('help')
-client.load_extension('DndCog')
+client.load_extension('AfkCog')
     
 @client.event
 async def on_message(message):
