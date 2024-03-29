@@ -11,7 +11,7 @@ This selfbot allows users to set themselves as AFK (Away From Keyboard) with a c
 ## Usage
 
 1. **Clone the Repository:**
-git clone https://github.com/ZironDev/discord-afk-bot.git
+git clone https://github.com/ZironDev/AFK-SELFBOT.git
 cd discord-afk-bot
 
 2. **Install Requirements:**
