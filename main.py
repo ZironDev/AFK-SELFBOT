@@ -19,7 +19,7 @@ def set_afk(user_id, message):
     data[str(user_id)] = message
     with open(db_file, "w") as f:
         json.dump(data, f)
-    print("AFK status set successfully.")
+    
 
 
         
