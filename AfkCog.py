@@ -20,7 +20,7 @@ def set_afk(user_id):
     data[str(user_id)] = {"status": "on"}
     with open(db_file, "w") as f:
         json.dump(data, f)
-    print("AFK status set successfully.")
+
 
 def remove_afk(user_id):
     with open(db_file, "r") as f:
@@ -28,7 +28,7 @@ def remove_afk(user_id):
     data[str(user_id)] = {"status": "off"}
     with open(db_file, "w") as f:
         json.dump(data, f)
-    print("AFK status removed successfully.")
+
         
 class DndCog(commands.Cog):
     def __init__(self, bot):
