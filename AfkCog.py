@@ -1,31 +1,51 @@
 import discord
 from discord.ext import commands
 import asyncio
-import sqlite3
+import json
+import os
 
+from discord.ext import commands
+
+
+db_file = "db.json"
+
+
+if not os.path.exists(db_file):
+    with open(db_file, "w") as f:
+        json.dump({}, f)
+
+def set_afk(user_id):
+    with open(db_file, "r") as f:
+        data = json.load(f)
+    data[str(user_id)] = {"status": "on"}
+    with open(db_file, "w") as f:
+        json.dump(data, f)
+    print("AFK status set successfully.")
+
+def remove_afk(user_id):
+    with open(db_file, "r") as f:
+        data = json.load(f)
+    data[str(user_id)] = {"status": "off"}
+    with open(db_file, "w") as f:
+        json.dump(data, f)
+    print("AFK status removed successfully.")
+        
 class DndCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        print("[DEBUG]: DND LOGGER ONLINE")
+        print("[DEBUG]: AFK CMD COG CONNECTED")
 
-    @commands.command(aliases=['afk'])
-    async def dnd(self, ctx, arg1="on"):
-        conn = sqlite3.connect('afk_status.db')
-        c = conn.cursor()
-        if arg1.lower() == "on":
-            c.execute("INSERT OR REPLACE INTO afk_status (user_id, afk_status, reply) VALUES (?, ?, ?)", (str(ctx.author.id), 1, arg2))
-            await ctx.message.delete()
-            await ctx.send('> **Set Your DM AFK successfully**')
-            await asyncio.sleep(3)
-            await ctx.message.delete()
-        elif arg1.lower() == "off":
-            c.execute("DELETE FROM afk_status WHERE user_id=?", (str(ctx.author.id),))
-            await ctx.message.delete()
-            await ctx.send(f"> **Removed afk successfully for {ctx.author.name}**")
-            await asyncio.sleep(3)
-            await ctx.message.delete()
-        conn.commit()
-        conn.close()
+    @commands.command()
+    async def afk(self, ctx):
+        if message.lower() == "off":
+            remove_afk(ctx.author.id)
+            await ctx.send(f"Removed Afk")
+        else:
+            set_afk(ctx.author.id)
+            await ctx.send(f"Turned on Afk")  
 
 def setup(bot):
     bot.add_cog(DndCog(bot))
+
+
+
