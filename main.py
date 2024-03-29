@@ -1,38 +1,50 @@
 import discord
 from discord.ext import commands
 import asyncio
-import sqlite3
+import json
+import os
+from discord.ext import commands
 
 
-conn = sqlite3.connect('afk_status.db')
-c = conn.cursor()
-c.execute('''CREATE TABLE IF NOT EXISTS afk_status
-             (user_id TEXT PRIMARY KEY, afk_status INTEGER, reply TEXT)''')
-conn.commit()
-conn.close()
+db_file = "db.json"
 
+
+if not os.path.exists(db_file):
+    with open(db_file, "w") as f:
+        json.dump({}, f)
+
+def set_afk(user_id, message):
+    with open(db_file, "r") as f:
+        data = json.load(f)
+    data[str(user_id)] = message
+    with open(db_file, "w") as f:
+        json.dump(data, f)
+    print("AFK status set successfully.")
+
+
+        
+        
 intents = discord.Intents.all()
 prefix = "."
 USER_TOKEN = ""
 client = commands.Bot(command_prefix=prefix, case_insensitive=True, self_bot=True, intents=intents)
 client.remove_command('help')
-client.load_extension('AfkCog')
+client.load_extension('DndCog')
     
+
 @client.event
 async def on_message(message):
-    conn = sqlite3.connect('afk_status.db')
-    c = conn.cursor()
-    
-    if message.author != client.user:
-        c.execute("SELECT afk_status, reply FROM afk_status WHERE user_id=?", (str(message.author.id),))
-        row = c.fetchone()
-        if row and row[0] == 1:
-            await message.channel.send("> **AFK. | Text me later**")
-        elif not message.guild:
-            await message.channel.send("> **AFK. | Text me later**")
-    
+    if message.author != client.user and not message.guild:
+        with open(db_file, "r") as f:
+            data = json.load(f)
+            if str(client.user.id) in data and data[str(client.user.id)]["status"] == "on":
+                await message.channel.send("**AFK. | Text me later**")
+            else:
+                return
     await client.process_commands(message)
 
-    
-    
+
+
 client.run(USER_TOKEN, bot=False)
+
+
