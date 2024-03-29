@@ -28,7 +28,7 @@ async def on_message(message):
         row = c.fetchone()
         if row and row[0] == 1:
             await message.channel.send("> **AFK. | Text me later**")
-        elif not message.guild:  # Check if it's a direct message
+        elif not message.guild:
             await message.channel.send("> **AFK. | Text me later**")
     
     await client.process_commands(message)
